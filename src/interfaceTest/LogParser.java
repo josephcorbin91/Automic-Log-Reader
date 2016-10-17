@@ -15,7 +15,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -109,7 +111,8 @@ public class LogParser {
 	 * @param pd A create progress dialog object that keeps track of the parsing progress
 	 * @throws IOException If there is a problem accessing the file
 	 */
-	void parseErrorsAE(File file, ProgressDialog pd) throws IOException {	
+	void parseErrorsAE(File file, ProgressDialog pd) throws IOException {
+		System.out.println("parseERRORSAE");
 		
 		
 		
@@ -263,7 +266,13 @@ public class LogParser {
 	view.menuItemLines.setEnabled(true);
 	view.menuItemUrl.setEnabled(true);
 	view.menuItemCopy.setEnabled(true);
-	makeTable("AE");}
+	makeTable("AE");
+	
+	String time = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+	CSVFileWriter CSVWriter = new CSVFileWriter(LogParser.view);
+	CSVWriter.writeTo("Error_Log_" + time + ".csv");
+
+	}
 	
 	void parseErrorsAM(File file, ProgressDialog pd) throws IOException {	
 		
@@ -791,6 +800,8 @@ public class LogParser {
 		view.errorTable.setCellSelectionEnabled(true);
 		view.errorTable.addMouseListener(new TableMouseListener(view.errorTable));
 		view.errorTable.setComponentPopupMenu(view.popupMenu);
+		
+	
 	}
 	
 	/**

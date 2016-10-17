@@ -35,5 +35,21 @@ public class User {
 			}
 		});
 	}
+	
+	
+	
+public User(MainMenu menu, boolean isAdmin, String [] inputArray) {
+		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					myView = new UserView(menu, isAdmin, inputArray);
+					myView.setVisible(false);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 		
 }

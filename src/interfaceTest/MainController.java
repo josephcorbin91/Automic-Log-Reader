@@ -13,20 +13,114 @@
 
 package interfaceTest;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.awt.EventQueue;
 
-public class MainController {
 
-	public static void main(String[] args) throws IOException
-	{
+public class MainController {
+	static String[] inputArray;
 	
+
+	public static void main(String[] ads)throws IOException
+	{	
+		
+
+	
+	String [] args = new String[3];
+	args[0]="C:\\Development\\Automic-Log-Reader\\WPsrv_log_014_01.txt";
+	args[1]="NoGroup";
+	args[2]="AutomationEngine";
+	
+	
+	//Arguments are given the program is being run from the command line		
+	if(args.length != 0){	
+	Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("# ------------------------------------ #");
+		System.out.println("#               LogReader              #");
+		System.out.println("# ------------------------------------ #");
+		System.out.println("# ------------------------------------ #");
+		System.out.println("\n\n");
+		
+	
+		
+		//List of valid Products and Groups 
+		ArrayList<String> validGroups = new ArrayList<String>();
+		ArrayList<String> validProducts = new ArrayList<String>();
+		validProducts.add("AutomationEngine");
+		validProducts.add("DollarUniverse");
+		validProducts.add("ApplicationManager");
+		
+		
+		
+		//User enters arguments manually 		
+		
+		inputArray = new String[3];
+		String softwareProduct;
+		
+		
+		//Verify Path 
+		String filePathString = args[0];
+		boolean validPath=false;
+		while(!validPath){
+		File f = new File(filePathString);
+		if(f.exists() && !f.isDirectory() && (filePathString.contains(".txt") || filePathString.contains(".log"))) { 
+			inputArray[0] = args[0];
+			validPath=true;
+		}
+		}
+	
+			
+	
+		//Verify SoftwareProduct
+		boolean isValidSoftwareProduct=false;
+		softwareProduct = args[2];	
+		while(!isValidSoftwareProduct){
+			if(!validProducts.contains(softwareProduct)){
+				
+			System.out.println(softwareProduct + " is an invalid Software Product.");
+			System.out.println("The available choices are:");
+			for(String element :validProducts)
+				System.out.println(element);
+			System.out.println("Please enter the Software Product");
+				softwareProduct = scanner.next();		
+			}
+			else{
+				isValidSoftwareProduct=true;
+			}
+		}
+		inputArray[2] = softwareProduct;				
+			
+		
+		//Verify Groups
+		String groups=args[1];
+	
+		if(groups.equals("NoGroup"))
+		{
+			
+			inputArray[1]="NoGroup";
+		}
+		
+	}
+	
+		
+		
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try 
 				{
-					MainMenu mainMenu = new MainMenu();
-					mainMenu.setVisible(true);   
+					MainMenu mainMenu = new MainMenu(inputArray);
+					System.out.println(inputArray);
+					if(inputArray==null){
+					mainMenu.setVisible(true);
+					}
+					else{
+						mainMenu.setVisible(false);
+					}
 				} 
 				catch (Exception e) {
 					e.printStackTrace();

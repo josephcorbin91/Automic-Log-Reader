@@ -50,8 +50,8 @@ public class ProgressDialog extends JDialog {
 	 * @param file The file that is being parsed
 	 * @param view The UserView that is associated with this object
 	 */
-	public ProgressDialog(File file, UserView view) {
-		prepareGUI(file, view);
+	public ProgressDialog(File file, UserView view,boolean cmdLine) {
+		prepareGUI(file, view,cmdLine);
 	}
 	
 	
@@ -87,7 +87,7 @@ public class ProgressDialog extends JDialog {
 	 * @param file The filepath for the file being parsed
 	 * @param view The UserView object associated with this ProgressDialog
 	 */
-	void prepareGUI(File file, UserView view){
+	void prepareGUI(File file, UserView view, boolean cmdLine){
 		//this.setModal(true);
 		setBounds(200, 200, 300, 200);
 		setLocationRelativeTo(null);
@@ -174,5 +174,8 @@ public class ProgressDialog extends JDialog {
 				view.btnSubmit.setEnabled(true);
 			}
 		});
+		
+		
+		
 	}
 }

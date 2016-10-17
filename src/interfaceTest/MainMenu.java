@@ -47,9 +47,21 @@ public class MainMenu extends JFrame {
 	private JComboBox<String> softwareProductJComboBox;
 	// String representing the software selected in the combobox 
 	private String softwareSelected; 
+	private String[] inputArray;
 	
-	public MainMenu() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	public MainMenu(String[] inputArray) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+		this.inputArray = inputArray;
+		
+		if(inputArray != null){
+			System.out.println("inputArray!=null");
+			doNotPrepareGUI();
+			user = new User(this,false,inputArray);
+			
+		}
+		else{
+			System.out.println("GUI INTERFACE PREPARED");
 		prepareGUI();
+		}
 	}
 	
 	/**
@@ -181,6 +193,118 @@ public class MainMenu extends JFrame {
 		center(this);
 	}
 	
+	
+	
+	/**
+	 * Creates the GUI for MainMenu
+	 * @throws ClassNotFoundException if classpath is broken
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws UnsupportedLookAndFeelException
+	 */
+	private void doNotPrepareGUI() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException{
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		
+		try {
+		     ClassLoader cl = this.getClass().getClassLoader();
+		     ImageIcon programIcon = new ImageIcon(cl.getResource("res/logo.png"));
+		     setIconImage(programIcon.getImage());
+		  } catch (Exception e) {
+		     System.out.println("Could not load program icon.");
+		  }
+		
+		this.setTitle("Project COEUS");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setPreferredSize(new Dimension(350, 250));
+		
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		this.add(contentPane);
+		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+			
+		contentPane.add(Box.createVerticalGlue());
+		
+		JPanel logoPanel = new JPanel();
+		logoPanel.setLayout(new BorderLayout());
+		
+		java.net.URL url = this.getClass().getClassLoader().getResource("res/Automic-Logotype-Black.png");
+		ImageIcon banner = new ImageIcon(url);
+		
+		Image bannerImage = banner.getImage();
+		Image resizedBannerImage = bannerImage.getScaledInstance(200, 40, java.awt.Image.SCALE_SMOOTH);
+		
+		banner = new ImageIcon(resizedBannerImage);
+		
+		JLabel bannerLabel = new JLabel(banner);
+		logoPanel.add(bannerLabel);
+		
+		contentPane.add(logoPanel);
+		
+		JPanel topPanel = new JPanel();
+		contentPane.add(topPanel);
+			
+		JLabel label = new JLabel("Please select an option:");
+		topPanel.add(label);
+			
+		Font defaultFont = new JLabel().getFont();
+		String fontName = defaultFont.getFontName();
+		int fontStyle = defaultFont.getStyle();
+		int fontSize = defaultFont.getSize() + 4;
+		
+		label.setFont(new Font(fontName, fontStyle, fontSize));
+		
+		contentPane.add(Box.createRigidArea(new Dimension(0, 10)));
+		
+		JPanel middlePanel = new JPanel();
+		contentPane.add(middlePanel);
+			
+		btn_user = new JButton("User");
+		btn_user.addActionListener(e -> {
+			user = new User(this, false, inputArray);
+			this.setVisible(false);
+			
+		});
+		btn_user.setPreferredSize(new Dimension(80, 25));
+		btn_user.setAlignmentY(Component.CENTER_ALIGNMENT);
+		
+		middlePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		middlePanel.add(btn_user);
+			
+		
+		btn_admin = new JButton("Admin");
+		btn_admin.addActionListener(e -> {
+			try {
+				loginFrame = new Login(this, inputArray[1]);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			loginFrame.setVisible(false);
+			this.setVisible(false);
+		});
+		btn_admin.setPreferredSize(new Dimension(80, 25));
+		btn_admin.setAlignmentY(Component.CENTER_ALIGNMENT);
+		middlePanel.add(btn_admin);
+				
+		contentPane.add(Box.createRigidArea(new Dimension(0, 10)));
+		
+		JPanel bottomPanel = new JPanel();
+		contentPane.add(bottomPanel);
+		
+		btn_exit = new JButton("Exit");
+		btn_exit.addActionListener(e ->{
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			System.exit(0);
+		});
+		btn_exit.setPreferredSize(new Dimension(60, 25));
+		
+		bottomPanel.add(btn_exit);
+		contentPane.add(Box.createVerticalGlue());
+		
+		pack();
+		center(this);
+	}
 	/**
 	 * Centers the MainMenu frame on the screen
 	 * @param frame Frame for class MainMenu
