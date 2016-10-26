@@ -92,7 +92,7 @@ public class Login extends JFrame {
 			
 			try {
 				if (checkAdmin(inputUsername, inputPassword)) {
-					Admin admin = new Admin(menu);
+					Admin admin = new Admin(menu, softwareSelected);
 					this.setVisible(false);
 				}
 				else {
@@ -112,7 +112,7 @@ public class Login extends JFrame {
 						
 						try {
 							if (checkAdmin(inputUsername, inputPassword)) {
-								Admin admin = new Admin(menu);
+								Admin admin = new Admin(menu, softwareSelected);
 								makeInvis();
 							}
 							else

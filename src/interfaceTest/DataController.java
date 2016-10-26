@@ -208,7 +208,7 @@ public class DataController {
 	 * @param choice Determines whether the user is modifying or adding entries
 	 * @param row If the choice is MODIFY, the row index that is being modified
 	 */
-	protected void modifyData(String folder, String keyWord, String message, String solution, String choice, int row) {
+	protected void modifyData(String softwareSelected,String folder, String keyWord, String message, String solution, String choice, int row) {
 		String [] tempArray = new String[4];
 		tempArray[0] = folder;
 		tempArray[1] = keyWord;
@@ -218,16 +218,16 @@ public class DataController {
 		//modifed to see which queries we need to add
 		if(choice.equals("MODIFY")) {
 			if(folderChanged)
-				errorQueries.add("update logerrors set Folder = \'" + 
+				errorQueries.add("update logerrors"+softwareSelected+" set Folder = \'" + 
 						Utility.addSingleQuote(folder) + "\' where Keyword = \'" + Utility.addSingleQuote(curErrorlist.get(row)[1]) + "\'");
 			if(errorMessageChanged)
-				errorQueries.add("update logerrors set Log_Error_Description = \'" +
+				errorQueries.add("update logerrors"+softwareSelected+" set Log_Error_Description = \'" +
 						Utility.addSingleQuote(message) + "\' where Keyword = \'" + Utility.addSingleQuote(curErrorlist.get(row)[1]) + "\'");
 			if(suggestedSolutionChanged)
-				errorQueries.add("update logerrors set Suggested_Solution = \'" +
+				errorQueries.add("update logerrors"+softwareSelected+" set Suggested_Solution = \'" +
 						Utility.addSingleQuote(solution) + "\' where Keyword = \'" + Utility.addSingleQuote(curErrorlist.get(row)[1]) + "\'");
 			if(keywordChanged)
-				errorQueries.add("update logerrors set Keyword = \'" +
+				errorQueries.add("update logerrors"+softwareSelected+" set Keyword = \'" +
 						Utility.addSingleQuote(keyWord) + "\' where Keyword = \'" + Utility.addSingleQuote(curErrorlist.get(row)[1]) + "\'");
 			admin.savedWords.remove(curErrorlist.get(row)[1]);
 			admin.savedWords.add(keyWord);
@@ -237,7 +237,8 @@ public class DataController {
 		}
 		//Otherwise we are adding an entry and simply add to the list and queries
 		else {
-			errorQueries.add("insert into logerrors values (\'" + Utility.addSingleQuote(keyWord) + "\',\'"
+			if(softwareSelected=="_DU"){
+			errorQueries.add("insert into logerrors"+softwareSelected+" (Keyword,Log_Error_Description,Suggested_Solution,Folder,Hyperlink) values (\'" + Utility.addSingleQuote(keyWord) + "\',\'"
 					+ Utility.addSingleQuote(message) + "\',\'" + Utility.addSingleQuote(solution) + "\',\'" +
 					Utility.addSingleQuote(folder) + "\',\'" + "www.google.com" + "\')");
 			curErrorlist.add(tempArray);
@@ -246,6 +247,18 @@ public class DataController {
 			someArray[1] = "www.google.com";
 			curHyperlinkList.add(someArray);
 			admin.savedWords.add(keyWord);
+			}
+			else if(softwareSelected=="_AE"){
+			errorQueries.add("insert into logerrors"+softwareSelected+" values (\'" + Utility.addSingleQuote(keyWord) + "\',\'"
+					+ Utility.addSingleQuote(message) + "\',\'" + Utility.addSingleQuote(solution) + "\',\'" +
+					Utility.addSingleQuote(folder) + "\',\'" + "www.google.com" + "\')");
+			curErrorlist.add(tempArray);
+			String[] someArray = new String[2];
+			someArray[0] = keyWord;
+			someArray[1] = "www.google.com";
+			curHyperlinkList.add(someArray);
+			admin.savedWords.add(keyWord);
+			}
 		}
 		//Reset the booleans and transfer data indicating that a change in the data has occurred
 		transferData("CHANGE");
@@ -264,8 +277,8 @@ public class DataController {
 	 * will delete the row, and also deletes the corresponding row within list. 
 	 * @param row - the row in which the data will be deleted
 	 */
-	protected void deleteData(int row) {
-		errorQueries.add("delete from logerrors where Keyword = \'" + Utility.addSingleQuote(curErrorlist.get(row)[1]) + "\'");
+	protected void deleteData(String softwareSelected,int row) {
+		errorQueries.add("delete from logerrors"+softwareSelected+" where Keyword = \'" + Utility.addSingleQuote(curErrorlist.get(row)[1]) + "\'");
 		admin.savedWords.remove(curErrorlist.get(row)[1]);
 		curErrorlist.remove(row);
 		curHyperlinkList.remove(row);
@@ -334,6 +347,7 @@ public class DataController {
 
 		Statement stmt = conn.createStatement();
 		for(int j = 0; j < errorQueries.size(); j++) {
+			System.out.println(errorQueries.get(j));
 			stmt.executeUpdate(errorQueries.get(j));
 		}
 		stmt.close();
@@ -346,13 +360,13 @@ public class DataController {
 	 * @throws ClassNotFoundException If getClass fails
 	 * @throws SQLException If connection to SQL server fails
 	 */
-	void writeURLsToDB() throws ClassNotFoundException, SQLException {
+	void writeURLsToDB(String softwareSelected) throws ClassNotFoundException, SQLException {
 		String driver = "net.sourceforge.jtds.jdbc.Driver";
 		Class.forName(driver);
 		Connection conn = DriverManager.getConnection("jdbc:jtds:sqlserver://vwaswp02:1433/coeus", "coeus", "C0eus");
 		Statement stmt = conn.createStatement();
 		for(int i = 0; i < curHyperlinkList.size(); i++) {
-			stmt.executeUpdate("update logerrors set Hyperlink = \'" + 
+			stmt.executeUpdate("update logerrors"+softwareSelected+" set Hyperlink = \'" + 
 					Utility.addSingleQuote(curHyperlinkList.get(i)[1]) + 
 					"\' where Keyword = \'" + Utility.addSingleQuote(curHyperlinkList.get(i)[0]) + "\'");
 			view.urlMap.put(curHyperlinkList.get(i)[0], curHyperlinkList.get(i)[1]);

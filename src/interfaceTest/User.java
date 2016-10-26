@@ -25,7 +25,7 @@ public class User {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					myView = new UserView(menu,false,softwareSelected);
+					myView = new UserView(menu,isAdmin,softwareSelected);
 					myView.setVisible(true);
 				
 					

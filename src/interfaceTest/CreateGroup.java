@@ -186,7 +186,7 @@ public class CreateGroup extends JDialog{
 			Connection conn = DriverManager.getConnection("jdbc:jtds:sqlserver://vwaswp02:1433/coeus", "coeus", "C0eus");
 	
 			Statement stmt = conn.createStatement();
-			stmt.executeUpdate("insert into Groups values (\'" + tfGroupName.getText() + 
+			stmt.executeUpdate("insert into Groups"+softwareSelected+" values (\'" + tfGroupName.getText() + 
 								"\',\'" + query.toString() + "\')");
 			view.loadGroupInfo(stmt, softwareSelected);
 			stmt.close();

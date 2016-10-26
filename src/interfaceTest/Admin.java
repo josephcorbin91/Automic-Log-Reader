@@ -13,7 +13,7 @@ public class Admin extends User {
 	 * Creates an Admin object, created by Login if the credentials are correct
 	 * @param menu Menu associated with this object
 	 */
-	public Admin(MainMenu menu) {
-		super(menu, true, "" );
+	public Admin(MainMenu menu,String softwareSelected) {
+		super(menu, true, softwareSelected);
 	}
 }

@@ -44,7 +44,7 @@ public class AddDialog extends JDialog {
 	 * Creates a dialog for the user to create an entry
 	 * @param dc Contains objects and variables used in this class
 	 */
-	public AddDialog(DataController dc) {
+	public AddDialog(DataController dc, String softwareSelectd) {
 		try {
 		     ClassLoader cl = this.getClass().getClassLoader();
 		     ImageIcon programIcon = new ImageIcon(cl.getResource("res/logo.png"));
@@ -151,7 +151,7 @@ public class AddDialog extends JDialog {
 			//Otherwise we call a function from DataController that adds the entry
 			else {
 				try {
-					dc.modifyData(tfFolder.getText(), tfKeyword.getText(), 
+					dc.modifyData(softwareSelectd,tfFolder.getText(), tfKeyword.getText(), 
 								tfError.getText(), tfSolution.getText(), "ADD", 0);
 				} catch (Exception e1) {
 					e1.printStackTrace();						

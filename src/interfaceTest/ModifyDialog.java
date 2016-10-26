@@ -52,7 +52,7 @@ public class ModifyDialog extends JDialog {
 	 * @param dc The DataController that created this object
 	 * @param row The row of the entry to be modified
 	 */
-	public ModifyDialog(String folder, String keyWord, String errorMessage,
+	public ModifyDialog(String softwareSelected, String folder, String keyWord, String errorMessage,
 						String solutionMessage,  DataController dc, int row) {
 		try {
 		     ClassLoader cl = this.getClass().getClassLoader();
@@ -167,7 +167,7 @@ public class ModifyDialog extends JDialog {
 					dc.setKeywordChanged(!(tfKeyword.getText().equals(keyWord)));
 					dc.setErrorMessageChanged(!(tfError.getText().equals(errorMessage)));
 					dc.setSuggestedSolutionChanged(!(tfSolution.getText().equals(solutionMessage)));
-					dc.modifyData(tfFolder.getText(), tfKeyword.getText(), tfError.getText(),
+					dc.modifyData(softwareSelected,tfFolder.getText(), tfKeyword.getText(), tfError.getText(),
 							tfSolution.getText(), "MODIFY", selectedRow);
 				} catch (Exception e1) {
 					e1.printStackTrace();						

@@ -24,17 +24,17 @@ public class MainController {
 	static String[] inputArray;
 	
 
-	public static void main(String[] ads)throws IOException
+	public static void main(String[] args)throws IOException
 	{	
 		
 
-	
+		/*
 	String [] args = new String[3];
 	args[0]="C:\\Development\\Automic-Log-Reader\\WPsrv_log_014_01.txt";
 	args[1]="NoGroup";
 	args[2]="AutomationEngine";
 	
-	
+		*/
 	//Arguments are given the program is being run from the command line		
 	if(args.length != 0){	
 	Scanner scanner = new Scanner(System.in);

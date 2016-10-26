@@ -134,9 +134,9 @@ public class AdminView extends JFrame {
 		  } catch (Exception e) {
 		     System.out.println("Could not load program icon.");
 		  }
-		
+		System.out.println("ADMIN SOFTWRE SELECTED" + softwareSelected);
 		//We create the datatable with the database info, and set the lists within DataController
-		createDataTable();
+		createDataTable(softwareSelected);
 		dc = new DataController(this, view);
 		dc.setHyperlinkList(hyperlinkList);
 		dc.setDefaultHyperlinkList(defaultHyperlinkList);
@@ -179,7 +179,7 @@ public class AdminView extends JFrame {
 		btnAddEntry.setToolTipText("Changes will be made locally");
 		btnAddEntry.addActionListener(e -> {
 			btnModifyHyperlink.setEnabled(false);
-			AddDialog add = new AddDialog(dc);
+			AddDialog add = new AddDialog(dc,softwareSelected);
 			add.setVisible(true);
 		});
 		pnlTabOneButtons.add(btnAddEntry);
@@ -193,7 +193,7 @@ public class AdminView extends JFrame {
 			if(tblErrorEntries.getSelectedRow() != -1){
 				btnModifyHyperlink.setEnabled(false);
 				int rowSelect = tblErrorEntries.getSelectedRow();
-				ModifyDialog modify = new ModifyDialog((String)tblErrorEntries.getValueAt(rowSelect, 0),
+				ModifyDialog modify = new ModifyDialog(softwareSelected,(String)tblErrorEntries.getValueAt(rowSelect, 0),
 													 (String)tblErrorEntries.getValueAt(rowSelect, 1),
 													 (String)tblErrorEntries.getValueAt(rowSelect, 2),
 													 (String)tblErrorEntries.getValueAt(rowSelect, 3),
@@ -218,7 +218,7 @@ public class AdminView extends JFrame {
 					btnModifyHyperlink.setEnabled(false);
 					int modelIndex = tblErrorEntries.convertRowIndexToModel(viewIndex); 
 					try {
-						dc.deleteData(viewIndex);
+						dc.deleteData(softwareSelected,viewIndex);
 					} catch (Exception e1) {
 					e1.printStackTrace();
 					}
@@ -365,7 +365,7 @@ public class AdminView extends JFrame {
 				dc.getHyperlinkList().get(i)[1] = (String)tblHyperlinkEntries.getValueAt(i, 1);
 			}
 			try {
-				dc.writeURLsToDB();
+				dc.writeURLsToDB(softwareSelected);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -420,14 +420,14 @@ public class AdminView extends JFrame {
 	 * @throws SQLException If connection to SQL server failed
 	 * @throws ClassNotFoundException if getClass was unsuccessful
 	 */
-	void createDataTable() throws SQLException, ClassNotFoundException {		
+	void createDataTable(String softwareSelected) throws SQLException, ClassNotFoundException {		
 		String driver = "net.sourceforge.jtds.jdbc.Driver";
 		Class.forName(driver);
 		Connection conn = DriverManager.getConnection("jdbc:jtds:sqlserver://vwaswp02:1433/coeus", "coeus", "C0eus");
 
 		Statement stmt = conn.createStatement();
 		String query2 = "select Keyword, Log_Error_Description, "+
-						"Suggested_Solution, Folder, Hyperlink from logerrors";
+						"Suggested_Solution, Folder, Hyperlink from logerrors"+softwareSelected;
 		ResultSet rs = stmt.executeQuery(query2);
 		while(rs.next())
 		{
@@ -435,7 +435,7 @@ public class AdminView extends JFrame {
 			entry[0] = rs.getString("Folder");
 			entry[1] = rs.getString("Keyword");
 			entry[2] = rs.getString("Log_Error_Description");
-			entry[3] = rs.getString("Suggested_Solution");
+			entry[3] = rs.getString("Suggested_Solution");		
 			keyWords.add(rs.getString("Keyword"));
 			savedWords.add(rs.getString("Keyword"));
 			list.add(entry);
