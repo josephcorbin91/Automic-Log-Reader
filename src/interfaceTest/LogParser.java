@@ -83,11 +83,10 @@ public class LogParser {
 	}
 	public LogParser(UserView view, int tab) {
 		selectedTab = tab;
-		System.out.println(view.numLinesBefore);
-		System.out.println("the view is " + view);
+	
+	
 		LogParser.view =  view;
-		System.out.println(view.numLinesBefore);
-		System.out.println("the view is " + view);
+
 		logicEvaluator = new LogicEvaluator(this);
 		linesBefore = new FixedStack<String>(view.numLinesBefore + 1);
 		linesAfter = new ConcurrentHashMap<Integer, FixedStack<String>>();
@@ -338,7 +337,7 @@ public class LogParser {
 			specialCase = false;
 			
 			for (String testWord : logWords) {
-				System.out.println(testWord);
+				
 				//Timestamp will always come first
 				//Is this a reliable way to find timestamp?
 				//Maybe change to regex

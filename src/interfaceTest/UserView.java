@@ -244,7 +244,7 @@ public class UserView extends JFrame{
 			
 			loadGroupInfo(stmt, sql_software_table);
 			stmt.close();
-			System.out.println(sql_software_table);
+			
 			prepareGUI(menu, isAdmin, sql_software_table);
 			///////////////////////////////////////////////////////////////////////////////////////////
 			//No group selected
@@ -264,14 +264,14 @@ public class UserView extends JFrame{
 			}
 			pnlTreeView.repaint();
 			
-			System.out.println(tabbedPane.getSelectedIndex());
+			
 			//Submit 
 			String path = inputArray[0];
 			if (path.equals(""))
 				System.out.println("Please enter a path");
 			else
 				try {
-					System.out.println("findLogErrorsCMD");
+					
 					findLogErrors(inputArray[0],sql_software_table,true);
 				} catch (IOException e1) {
 					System.out.println("The file cannot be found");
@@ -376,7 +376,7 @@ public class UserView extends JFrame{
 		    		
 		            
 		       
-	            
+	          
 			}
 			
 			
@@ -386,7 +386,7 @@ public class UserView extends JFrame{
 	//User View for GUI
 	public UserView(MainMenu menu, boolean isAdmin, String softwareSelected) throws ClassNotFoundException, SQLException {
 		this.softwareSelected = softwareSelected;
-		System.out.println(softwareSelected);
+		
 		hasCopiedOriginalKeyWords = false;
 		//Initializes the blank table
 		data = new Object[40][];
@@ -433,7 +433,7 @@ public class UserView extends JFrame{
 	 */
 	protected void fillKeywords(Statement stmt,String softwareSelected) throws SQLException{
 		
-		System.out.println("Fill key words");
+		
 		keyWords.clear();
 		folderMap.clear();
 		folderSet.clear();
@@ -444,7 +444,7 @@ public class UserView extends JFrame{
 		String query = "select Keyword, Folder, Hyperlink from LogErrors"+softwareSelected;
 		ResultSet rs = stmt.executeQuery(query);
 		while(rs.next()){
-			System.out.println(rs);
+			
 			keyWords.add(rs.getString("Keyword"));
 			folderMap.put(rs.getString("Keyword"), rs.getString("Folder"));
 			urlMap.put(rs.getString("Keyword"), rs.getString("Hyperlink"));
@@ -518,7 +518,7 @@ public class UserView extends JFrame{
 						fileSize = file.length();
 						fileSizeDivHundred = fileSize/100;
 						btnSubmit.setEnabled(false);
-						System.out.println(softwareSelected);
+					
 						switch(softwareSelected){
 						case "_AE":logParser.parseErrorsAE(file, dialog, commandLine);break;
 						case "_DU":logParser.parseErrorsDU(file, dialog,commandLine);break;
@@ -874,9 +874,9 @@ public class UserView extends JFrame{
 	            				.getElementAt(i);
 	            		
 	            		if (cbItem.isSelected()){
-	            			System.out.println(cbItem);
+	            			
 	            			String keywordString = GroupInfo.get(cbItem.toString());
-	            			System.out.println(keywordString);
+	            			
 				            String keywordStringArray[] = keywordString.split(" ");
 				            for (String key : keywordStringArray){
 				            	groupKeywordsHashSet.add(key);
@@ -1268,9 +1268,9 @@ public class UserView extends JFrame{
             				.getElementAt(i);
             		
             		if (cbItem.isSelected()){
-            			System.out.println(cbItem);
+            			
             			String keywordString = GroupInfo.get(cbItem.toString());
-            			System.out.println(keywordString);
+            			
 			            String keywordStringArray[] = keywordString.split(" ");
 			            for (String key : keywordStringArray){
 			            	groupKeywordsHashSet.add(key);

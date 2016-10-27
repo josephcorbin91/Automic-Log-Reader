@@ -32,7 +32,7 @@ public class CSVFileWriter {
 	 * @throws IOException If there is a problem writing to the file
 	 */
 	public void writeTo(String fileName,String softwareSelected, String directory) throws IOException{
-		System.out.println(fileName + " directoy" + directory);
+		
 		FileWriter writer = new FileWriter(new File(directory,fileName));
 		for (int i = 0; i< view.chosenHeader.length; i++){
 			writer.append(view.chosenHeader[i]);
@@ -48,7 +48,7 @@ public class CSVFileWriter {
 			
 	
 		
-		for (int i = 0; i < 2; i++){
+		for (int i = 0; i < view.logParser.errorData.size(); i++){
 			String myLine = "";
 			int errorCount = (int)view.logParser.errorData.get(i)[0];
 			myLine += errorCount + ",";
@@ -89,7 +89,7 @@ public class CSVFileWriter {
 			if(function.contains(","))
 				function = "\"" + function + "\"";
 			myLine += (function + "\r\n");
-			System.out.println(myLine);
+			
 			writer.write(myLine);
 		}
 		}
@@ -122,6 +122,7 @@ public class CSVFileWriter {
 		
 		writer.flush();
 		writer.close();
+		  System.exit(1);
 	
 }
 }
