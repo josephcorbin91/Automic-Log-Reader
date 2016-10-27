@@ -31,7 +31,7 @@ import javax.swing.table.TableColumn;
 
 public class LogParser {
 	/**Headers  for the JTable*/
-	protected final String [] duHeaders = {"Error #", "Timestamp","Message Type", "Area", "Technical Engine", "Process Id", "Function" , "Error Message","Suggested Solution", "HyperLink"};
+	protected final String [] duHeaders = {"Error #", "Timestamp","Message Type", "Area", "Technical Engine", "Process Id", "Function" , "Error Message","Suggested Solution"};
 	/**Headers OneAutomation for the JTable*/
 	protected final String [] aeHeaders = {"Error #", "Timestamp","Keyword", "Error Message", "Suggested Solution"};
 	/**Headers applicationManager for the JTable*/
@@ -111,9 +111,9 @@ public class LogParser {
 	 * @param pd A create progress dialog object that keeps track of the parsing progress
 	 * @throws IOException If there is a problem accessing the file
 	 */
-	void parseErrorsAE(File file, ProgressDialog pd) throws IOException {
-		System.out.println("parseERRORSAE");
-		
+	void parseErrorsAE(File file, ProgressDialog pd,boolean commandLine) throws IOException {
+	
+		String softwareSelected ="_AE";
 		
 		
 		
@@ -158,7 +158,7 @@ public class LogParser {
 		else {
 			logWords = logLine.split(" ");
 			//To Be Deleted 
-			System.out.println(logLine);
+			
 			timeStamp = null;
 			errorMessage.setLength(0);
 			entry = null;
@@ -268,13 +268,22 @@ public class LogParser {
 	view.menuItemCopy.setEnabled(true);
 	makeTable("AE");
 	
-	String time = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-	CSVFileWriter CSVWriter = new CSVFileWriter(LogParser.view);
-	CSVWriter.writeTo("Error_Log_" + time + ".csv");
+	
+	if(commandLine){
+		String time = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		CSVFileWriter CSVWriter = new CSVFileWriter(LogParser.view);
+		try {
+			CSVWriter.writeTo("Error_Log_" + time + ".csv",softwareSelected,  System.getProperty("user.dir"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 
 	}
 	
-	void parseErrorsAM(File file, ProgressDialog pd) throws IOException {	
+	void parseErrorsAM(File file, ProgressDialog pd, boolean commandLine) throws IOException {	
 		
 		
 		
@@ -427,10 +436,24 @@ public class LogParser {
 	view.menuItemLines.setEnabled(true);
 	view.menuItemUrl.setEnabled(true);
 	view.menuItemCopy.setEnabled(true);
-	makeTable("AM");}
+	makeTable("AM");
+	
+	if(commandLine){
+		String time = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		CSVFileWriter CSVWriter = new CSVFileWriter(LogParser.view);
+		try {
+			CSVWriter.writeTo("Error_Log_" + time + ".csv","_AM",  System.getProperty("user.dir"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	}
 		
 	
-		void parseErrorsDU(File file, ProgressDialog pd) throws IOException {
+		void parseErrorsDU(File file, ProgressDialog pd, boolean commandLine) throws IOException {
+			String softwareSelected ="_DU";
 			
 			
 			
@@ -459,6 +482,7 @@ public class LogParser {
 		
 		FileReader logInput = new FileReader(view.logFile);
 		BufferedReader logbr = new BufferedReader(logInput);
+		
 
 		logLine = logbr.readLine();
 		
@@ -484,6 +508,7 @@ public class LogParser {
 				
 				logWords = logLine.split("\\|");
 				if(logWords.length >1){
+					
 				
 				 
 			
@@ -506,6 +531,7 @@ public class LogParser {
 				//{"Error #", "Timestamp","Message Type", "Area", "Technical Engine", "Process Id", "Function" , "Error Message","Suggested Solution", "HyperLink"};
 						//Testing the UCode from the file against the error UCodes
 						if (view.keyWords.contains(errorMessageDU)) {
+						
 							keywordFound = true;
 							errorCount++;
 							addLinesBefore();
@@ -520,7 +546,7 @@ public class LogParser {
 								entry [5] = processID;
 								entry[6] = function;
 								entry [7] = errorMessageDU;
-								System.out.println(entry[0]);
+								
 								//We get a suggested solution for the corresponding keyword
 								if (view.solutions.get(entry[7]) != null) {
 									entry[8] = view.solutions.get(entry[7]);
@@ -571,6 +597,20 @@ public class LogParser {
 		view.menuItemUrl.setEnabled(true);
 		view.menuItemCopy.setEnabled(true);
 		makeTable("DU");
+		if(commandLine){
+			String time = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+			CSVFileWriter CSVWriter = new CSVFileWriter(LogParser.view);
+			try {
+				CSVWriter.writeTo("Error_Log_" + time + ".csv",softwareSelected,  System.getProperty("user.dir"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+		
 		}
 	
 	

@@ -50,8 +50,8 @@ public class ProgressDialog extends JDialog {
 	 * @param file The file that is being parsed
 	 * @param view The UserView that is associated with this object
 	 */
-	public ProgressDialog(File file, UserView view,boolean cmdLine) {
-		prepareGUI(file, view,cmdLine);
+	public ProgressDialog(File file, UserView view,boolean cmdLine, String softwareSelected) {
+		prepareGUI(file, view,cmdLine,softwareSelected);
 	}
 	
 	
@@ -87,7 +87,7 @@ public class ProgressDialog extends JDialog {
 	 * @param file The filepath for the file being parsed
 	 * @param view The UserView object associated with this ProgressDialog
 	 */
-	void prepareGUI(File file, UserView view, boolean cmdLine){
+	void prepareGUI(File file, UserView view, boolean cmdLine, String softwareSelected){
 		//this.setModal(true);
 		setBounds(200, 200, 300, 200);
 		setLocationRelativeTo(null);
@@ -145,9 +145,10 @@ public class ProgressDialog extends JDialog {
 			            }
 			        }
 			        super.approveSelection();
-			    }
+				    }
 			};
 			chooser.setDialogTitle("Export To");
+			
 			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 			chooser.setSelectedFile(new File("Error_Log_" + timeStamp + ".csv"));
 		    FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -158,7 +159,8 @@ public class ProgressDialog extends JDialog {
 		    if(returnVal == JFileChooser.APPROVE_OPTION) {
 		    	try {
 		    		CSVFileWriter CSVWriter = new CSVFileWriter(view);
-		    		CSVWriter.writeTo(chooser.getSelectedFile().getName());
+		    		
+		    		CSVWriter.writeTo(chooser.getSelectedFile().getName(),softwareSelected,chooser.getSelectedFile().getParent());
 		    		
 				} catch (Exception e1) {
 					e1.printStackTrace();

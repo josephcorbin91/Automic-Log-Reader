@@ -28,11 +28,12 @@ public class MainController {
 	{	
 		
 
-		/*
+	/*
 	String [] args = new String[3];
-	args[0]="C:\\Development\\Automic-Log-Reader\\WPsrv_log_014_01.txt";
+	args[0]="C:\\Development\\Automic-Log-Reader\\WPsrv_log_014_01.txt";//universe.txt";
 	args[1]="NoGroup";
 	args[2]="AutomationEngine";
+	
 	
 		*/
 	//Arguments are given the program is being run from the command line		
@@ -114,7 +115,7 @@ public class MainController {
 				try 
 				{
 					MainMenu mainMenu = new MainMenu(inputArray);
-					System.out.println(inputArray);
+					
 					if(inputArray==null){
 					mainMenu.setVisible(true);
 					}

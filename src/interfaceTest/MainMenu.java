@@ -53,13 +53,13 @@ public class MainMenu extends JFrame {
 		this.inputArray = inputArray;
 		
 		if(inputArray != null){
-			System.out.println("inputArray!=null");
+			
 			doNotPrepareGUI();
 			user = new User(this,false,inputArray);
 			
 		}
 		else{
-			System.out.println("GUI INTERFACE PREPARED");
+			
 		prepareGUI();
 		}
 	}
@@ -213,7 +213,7 @@ public class MainMenu extends JFrame {
 		     System.out.println("Could not load program icon.");
 		  }
 		
-		this.setTitle("Project COEUS");
+		this.setTitle("Automic Log Reader");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setPreferredSize(new Dimension(350, 250));
 		

@@ -88,8 +88,8 @@ public class UserView extends JFrame{
 	protected HashMap<String, String> GroupInfo = new HashMap<String, String>();
 	/**One Automation Headers for the JTable in the interface*/
 	protected final String [] headersOneAutomation = {"Error #", "Timestamp","Keyword", "Error Message", "Suggested Solution"};
-	protected final String [] headersDollarUniverse = {"Error #", "Timestamp","Message Type", "Area", "Technical Engine", "Process Id", "Function" , "Error Message","Suggested Solution", "HyperLink"};	
-	protected final String [] headersApplicationsManager = {"Error #", "Timestamp","Message Type", "Area", "Technical Engine", "Process Id", "Function" , "Error Message","Suggested Solution", "HyperLink"};	
+	protected final String [] headersDollarUniverse = {"Error #", "Timestamp","Message Type", "Technical Engine", "Process Id", "Function" , "Error Message","Suggested Solution"};	
+	protected final String [] headersApplicationsManager = {"Error #", "Timestamp","Message Type", "Area", "Technical Engine", "Process Id", "Function" , "Error Message","Suggested Solution"};	
 	protected String [] chosenHeader;
 	protected int numberOfColumns;
 	/**Used to fill the contents of the JTable, will contains headers and errorData*/
@@ -226,8 +226,8 @@ public class UserView extends JFrame{
 			
 			switch(inputArray[2]){
 			case "AutomationEngine" : numberOfColumns=5;chosenHeader = headersOneAutomation;sql_software_table="_AE"; break;
-			case "DollarUniverse" : numberOfColumns=10; chosenHeader = headersApplicationsManager;sql_software_table="_DU"; break;
-			case "ApplicationManager" : numberOfColumns=10; chosenHeader = headersDollarUniverse;sql_software_table="_AM";break;		
+			case "DollarUniverse" : numberOfColumns=10; chosenHeader = headersDollarUniverse;sql_software_table="_DU"; break;
+			case "ApplicationManager" : numberOfColumns=10; chosenHeader =headersApplicationsManager ;sql_software_table="_AM";break;		
 			}
 			
 			
@@ -370,9 +370,9 @@ public class UserView extends JFrame{
 			}
 			
 			
-			//Write to csv 
+		
 		    		
-	            
+		
 		    		
 		            
 		       
@@ -395,8 +395,8 @@ public class UserView extends JFrame{
 		String sql_software_table="";
 		switch(softwareSelected){
 		case "One Automation" : numberOfColumns=5;chosenHeader = headersOneAutomation;sql_software_table="_AE"; break;
-		case "Dollar Universe" : numberOfColumns=10; chosenHeader = headersApplicationsManager;sql_software_table="_DU"; break;
-		case "Applications Manager" : numberOfColumns=10; chosenHeader = headersDollarUniverse;sql_software_table="_AM";break;		
+		case "Dollar Universe" : numberOfColumns=10; chosenHeader =headersDollarUniverse ;sql_software_table="_DU"; break;
+		case "Applications Manager" : numberOfColumns=10; chosenHeader =headersApplicationsManager ;sql_software_table="_AM";break;		
 		}
 	
 		
@@ -502,7 +502,7 @@ public class UserView extends JFrame{
 					return;
 				}
 			}
-			dialog = new ProgressDialog(file, this, commandLine);
+			dialog = new ProgressDialog(file, this, commandLine,softwareSelected);
 			if(commandLine)
 			dialog.setVisible(false);
 			else
@@ -518,11 +518,11 @@ public class UserView extends JFrame{
 						fileSize = file.length();
 						fileSizeDivHundred = fileSize/100;
 						btnSubmit.setEnabled(false);
-						System.out.println("S" +softwareSelected);
+						System.out.println(softwareSelected);
 						switch(softwareSelected){
-						case "_AE":logParser.parseErrorsAE(file, dialog);break;
-						case "_DU":logParser.parseErrorsDU(file, dialog);break;
-						case "_AM":logParser.parseErrorsAM(file, dialog);break;
+						case "_AE":logParser.parseErrorsAE(file, dialog, commandLine);break;
+						case "_DU":logParser.parseErrorsDU(file, dialog,commandLine);break;
+						case "_AM":logParser.parseErrorsAM(file, dialog,commandLine);break;
 						}						
 						} catch (IOException e) {
 							e.printStackTrace();
