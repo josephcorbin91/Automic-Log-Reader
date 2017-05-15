@@ -21,7 +21,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -283,6 +284,7 @@ public class LogParser {
 	}
 	
 	void parseErrorsAM(File file, ProgressDialog pd, boolean commandLine) throws IOException {	
+		Pattern pattern = Pattern.compile("\\(([^)]+)\\)");
 		
 		
 		
@@ -319,14 +321,33 @@ public class LogParser {
 		}
 		updateLinesAfter(logLine);
 		updateProgress(logLine);
-		//If the user is on the logic statement tab, we send 
-		//lines to the logic evaluator
-		if(selectedTab == 1) {
-			logicEvaluator.addLines(logLine, logbr);
-		}
-		else {
-			logWords = logLine.split(" ");
-			//To Be Deleted 
+		
+		if (logLine.split(" ")[0].equals("ErrorMsg:") && view.keyWords.contains(logLine.substring(10,logLine.indexOf("(")).trim())){
+			String time = logLine.substring(logLine.indexOf("(")+1,logLine.indexOf(")"));
+			String error = logLine.substring(10,logLine.indexOf("(")).trim();
+			String details= logbr.readLine().substring(9);
+			
+			System.out.println("time");
+			System.out.println(time);
+			System.out.println("error");
+			System.out.println(error);
+			System.out.println("details");
+			System.out.println(details);
+
+
+			for(String value : view.keyWords){
+				System.out.println(value);
+				if(value.equals(error)){
+					System.out.println(value.length());
+					System.out.println(error.length());
+				}
+					
+		
+			}
+			
+			
+		
+		
 			
 			timeStamp = null;
 			errorMessage.setLength(0);
@@ -334,79 +355,33 @@ public class LogParser {
 			
 			keywordFound = false;
 			timeStampFound = false;
-			specialCase = false;
-			
-			for (String testWord : logWords) {
-				
-				//Timestamp will always come first
-				//Is this a reliable way to find timestamp?
-				//Maybe change to regex
-				if (testWord.length() == 19 && !timeStampFound) {
-					timeStamp = testWord;
-					timeStampFound = true;
-				}
-				if(timeStampFound && !keywordFound) {
-					//Testing the UCode from the file against the error UCodes
-					if (view.keyWords.contains(testWord)) {
+			specialCase = false;	
+					
+					
+						
 						keywordFound = true;
 						errorCount++;
 						addLinesBefore();
-						//If we have a deadlock error, this is a special case
-						if (testWord.equals("DEADLOCK")) {
-							entry = parseDeadlockError(logbr, timeStamp);
-							if(entry == null) {
-								view.linesBeforeArrayList.remove(view.linesBeforeArrayList.size() - 1);
-								view.errorLinesArrayList.remove(view.errorLinesArrayList.size() - 1);
-								errorCount--;
-							}
-							else
-								addLinesAfter(errorCount);
-							specialCase = true;
-							break;
-						}
-						//If we have an arrow error, this is a special case
-						else if (testWord.equals("===>") && logLine.contains("Time critical")) {
-							entry = parseArrowError(logbr, timeStamp, logWords);
-							if(entry == null) {
-								view.linesBeforeArrayList.remove(view.linesBeforeArrayList.size() - 1);
-								view.errorLinesArrayList.remove(view.errorLinesArrayList.size() - 1);
-								errorCount--;
-							}
-							else {
-								addLinesAfter(errorCount);
-							}
-							specialCase = true;		
-							break;
-						}
-						//Otherwise we make an entry like normal
-						else {
+						
 							addLinesAfter(errorCount);
 							entry = new Object[5];
 							entry[0] = errorCount;
-							entry[1] = timeStamp;
-							entry[2] = testWord;
+							entry[1] = time;
+							entry[2] = error;
+							entry[3] = details;
 							//We get a suggested solution for the corresponding keyword
 							if (view.solutions.get(entry[2]) != null) {
 								entry[4] = view.solutions.get(entry[2]);
 							}
-						}
-					}
-				}
-				//If we've found both the timestamp and the keyword, we start
-				//generating an error message until the line is done
-				else if(timeStampFound && keywordFound) {
-					errorMessage.append(testWord + " ");
-				}
-			}
-			//Make sure an entry was actually created for the line
-			if(entry != null) {
-				if (!specialCase) {
-					entry[3] = errorMessage.toString();
-				}
-				//If there was no error message, then set to blank
-				if (entry[3] == null) {
-					entry[3] = " ";
-				}
+							else{
+								entry[4] = "";
+							}
+							System.out.println("KEYWORD");
+						
+			
+				
+			if(entry != null){
+			System.out.println("ENTRY COUNT " + entry[0] + "ENTRY TIME" + entry[1] + " KEYWORD"  + entry[2]);
 				errorData.add(entry);
 			}
 		}

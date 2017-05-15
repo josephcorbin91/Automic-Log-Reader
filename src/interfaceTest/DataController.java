@@ -259,6 +259,17 @@ public class DataController {
 			curHyperlinkList.add(someArray);
 			admin.savedWords.add(keyWord);
 			}
+			else if(softwareSelected=="_AM"){
+				errorQueries.add("insert into logerrors"+softwareSelected+" values (\'" + Utility.addSingleQuote(keyWord) + "\',\'"
+						+ Utility.addSingleQuote(message) + "\',\'" + Utility.addSingleQuote(solution) + "\',\'" +
+						Utility.addSingleQuote(folder) + "\',\'" + "www.google.com" + "\')");
+				curErrorlist.add(tempArray);
+				String[] someArray = new String[2];
+				someArray[0] = keyWord;
+				someArray[1] = "www.google.com";
+				curHyperlinkList.add(someArray);
+				admin.savedWords.add(keyWord);
+				}
 		}
 		//Reset the booleans and transfer data indicating that a change in the data has occurred
 		transferData("CHANGE");

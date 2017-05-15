@@ -119,7 +119,31 @@ public class CSVFileWriter {
 				writer.write(myLine);
 	}
 		}
-		
+else if(softwareSelected == "_AM"){
+			
+			for (int i = 0; i < view.logParser.errorData.size(); i++){
+				String myLine = "";
+				int errorCount = (int)view.logParser.errorData.get(i)[0];
+				myLine += errorCount + ",";
+				String timeStamp = (String)view.logParser.errorData.get(i)[1] + ",";
+				myLine += timeStamp;
+				String keyWord = (String) view.logParser.errorData.get(i)[2];
+				//We put double quotes around commas so that the content of
+				//one cell doesn't improperly get split into two cells
+				if(keyWord.contains(","))
+					keyWord = "\"" + keyWord + "\"";
+				myLine += (keyWord + ",");
+				String errorMsg = (String) view.logParser.errorData.get(i)[3];
+				if(errorMsg.contains(","))
+					errorMsg = "\"" + errorMsg + "\"";
+				myLine += (errorMsg + ",");
+				String solutionMsg = (String) view.logParser.errorData.get(i)[4];
+				if(solutionMsg.contains(","))
+					solutionMsg = "\"" + solutionMsg + "\"";
+				myLine += solutionMsg + "\r\n";
+				writer.write(myLine);
+	}
+		}
 		writer.flush();
 		writer.close();
 		  System.exit(1);
