@@ -1,0 +1,2 @@
+Error #,Timestamp,Message Type,Area,Technical Engine,Process Id,Function,Error Message,Suggested Solution,
+1,2014-12-17 09:18:42,WARN,X,IO,pid=8040.5512,u_io_srv_main,***** No license found. Grace period expires in 9 days *****,u_io_srv_main

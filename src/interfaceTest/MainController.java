@@ -64,10 +64,17 @@ public class MainController {
 		while(!validPath){
 		File f = new File(filePathString);
 		if(f.exists() && !f.isDirectory() && (filePathString.contains(".txt") || filePathString.contains(".log"))) { 
-			inputArray[0] = args[0];
+			inputArray[0] = filePathString;
 			validPath=true;
 		}
+		else{
+			System.out.println(filePathString + " is an invalid file path.");
+			System.out.println("Please enter a valid file path.");
+				filePathString = scanner.nextLine();
+				validPath=false;
 		}
+		}
+		
 	
 			
 	
