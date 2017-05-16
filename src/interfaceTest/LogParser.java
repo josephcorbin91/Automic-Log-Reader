@@ -327,25 +327,7 @@ public class LogParser {
 			String error = logLine.substring(10,logLine.indexOf("(")).trim();
 			String details= logbr.readLine().substring(9);
 			
-			System.out.println("time");
-			System.out.println(time);
-			System.out.println("error");
-			System.out.println(error);
-			System.out.println("details");
-			System.out.println(details);
-
-
-			for(String value : view.keyWords){
-				System.out.println(value);
-				if(value.equals(error)){
-					System.out.println(value.length());
-					System.out.println(error.length());
-				}
-					
 		
-			}
-			
-			
 		
 		
 			
@@ -376,12 +358,10 @@ public class LogParser {
 							else{
 								entry[4] = "";
 							}
-							System.out.println("KEYWORD");
 						
 			
 				
 			if(entry != null){
-			System.out.println("ENTRY COUNT " + entry[0] + "ENTRY TIME" + entry[1] + " KEYWORD"  + entry[2]);
 				errorData.add(entry);
 			}
 		}
@@ -535,14 +515,7 @@ public class LogParser {
 				
 				//Make sure an entry was actually created for the line
 				if(entry != null) {
-					if (!specialCase) {
-						entry[3] = errorMessage.toString();
-					}
-					//If there was no error message, then set to blank
-					if (entry[3] == null) {
-						entry[3] = " ";
-					}
-					errorData.add(entry);
+				errorData.add(entry);
 				}
 			
 			logLine = logbr.readLine();

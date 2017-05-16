@@ -63,7 +63,13 @@ public class CSVFileWriter {
 				messageType = "\"" + messageType + "\"";
 			myLine += (messageType + ",");
 			
-		
+			String area = (String) view.logParser.errorData.get(i)[3];
+						//We put double quotes around commas so that the content of
+						//one cell doesn't improperly get split into two cells
+						if(area.contains(","))
+							area = "\"" + area + "\"";
+						myLine += (area + ",");
+						
 			
 			String technicalEngine = (String) view.logParser.errorData.get(i)[4];
 			if(technicalEngine.contains(","))

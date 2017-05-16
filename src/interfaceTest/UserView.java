@@ -88,7 +88,7 @@ public class UserView extends JFrame{
 	protected HashMap<String, String> GroupInfo = new HashMap<String, String>();
 	/**One Automation Headers for the JTable in the interface*/
 	protected final String [] headersOneAutomation = {"Error #", "Timestamp","Keyword", "Error Message", "Suggested Solution"};
-	protected final String [] headersDollarUniverse = {"Error #", "Timestamp","Message Type", "Technical Engine", "Process Id", "Function" , "Error Message","Suggested Solution"};	
+	protected final String [] headersDollarUniverse = {"Error #", "Timestamp","Message Type","Area", "Technical Engine", "Process Id", "Function" , "Error Message","Suggested Solution"};	
 	protected final String [] headersApplicationsManager = {"Error #", "Timestamp", "Error Message", "Suggested Solution"};
 	protected String [] chosenHeader;
 	protected int numberOfColumns;
