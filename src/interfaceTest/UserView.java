@@ -224,7 +224,7 @@ public class UserView extends JFrame{
 					
 			String sql_software_table="";
 			
-			switch(inputArray[2]){
+			switch(inputArray[1]){
 			case "AutomationEngine" : numberOfColumns=5;chosenHeader = headersOneAutomation;sql_software_table="_AE"; break;
 			case "DollarUniverse" : numberOfColumns=10; chosenHeader = headersDollarUniverse;sql_software_table="_DU"; break;
 			case "ApplicationManager" : numberOfColumns=5; chosenHeader =headersApplicationsManager ;sql_software_table="_AM";break;		
@@ -249,8 +249,7 @@ public class UserView extends JFrame{
 			///////////////////////////////////////////////////////////////////////////////////////////
 			//No group selected
 			
-			if(inputArray[1]=="NoGroup")
-			{
+			
 			//Toggle All
 			cbTree.expandAll(new TreePath(cbTree.getModel().getRoot()));
 			Enumeration<?> g = ((DefaultMutableTreeNode) cbTree.getModel().getRoot()).preorderEnumeration();
@@ -262,7 +261,7 @@ public class UserView extends JFrame{
 					cb.setSelected(!cb.isSelected());
 				}
 			}
-			pnlTreeView.repaint();
+			//pnlTreeView.repaint();
 			
 			
 			//Submit 
@@ -279,105 +278,7 @@ public class UserView extends JFrame{
 					System.exit(1);
 				}
 			}		
-		///////////////////////////////////////////////////////////////////////////////////////////	
-			//Groups Selected
-			else
-			{	
-				
-				
-				//Adding groups from command line to groupKeywordsHashSet
-				String[] groupsCommandLine = inputArray[1].split("-");
-				
-				ArrayList<String> inputGroups = new ArrayList<String>(Arrays.asList(groupsCommandLine));
-				ArrayList<Object> validGroupsObject = new ArrayList<Object>(Arrays.asList(groupNameListModel.toArray()));
-				ArrayList<String> validGroupsStrings = new ArrayList<String>();
-				
-				
-				
-				
-				
-				//Verify that the groups are valid. 
-				for(Object element : validGroupsObject)
-				{
-					
-					System.out.println(element);
-					validGroupsStrings.add(element.toString());
-				}
-				
-
-				
-				for(String element : inputGroups)				
-					if(!validGroupsStrings.contains(element))
-					{
-						System.out.println("The aforementionned groups are valid");									
-						System.out.println("Please re-run command.");
-						System.exit(1);
-					}
-				
-				
-				CheckBoxListItem item;
-				for(int i=0; i<groupNameListModel.getSize(); i++){
-					for(int j=0; j <groupsCommandLine.length; j++ ){	
-						
-						if(groupNameListModel.get(i).toString().equals(groupsCommandLine[j])){
-							 item = (CheckBoxListItem) groupNameListModel.getElementAt(i);
-							 item.setSelected(!item.isSelected());						
-							 groupNameList.repaint(groupNameList.getCellBounds(i, i));
-						}
-						
-					}
-				}
-				
-				
-				
-	            for (int i=0; i<groupNameListModel.size(); i++){
-	        		CheckBoxListItem cbItem = (CheckBoxListItem) groupNameListModel.getElementAt(i);
-	        		
-	        		if (cbItem.isSelected()){        			
-	        			String keywordString = GroupInfo.get(cbItem.toString());
-			            String keywordStringArray[] = keywordString.split(" ");
-			            for (String key : keywordStringArray){
-			            	groupKeywordsHashSet.add(key);
-			            }
-	        		}
-	        	}
-	            for (String key : groupKeywordsHashSet){
-	            	groupKeywordsListModel.addElement(key);
-	            }
-	            
-	            //Change the grouped pane to group view 
-	            tabbedPane.setSelectedIndex(2);
-	            	
-	            
-				
-				
-				
-				 
-		            	            
-		          //Submit 
-		    		String path = inputArray[0];
-		    		if (path.equals(""))
-		    			System.out.println("Please enter a path");
-		    		else
-		    		{
-		    			try {
-		    				findLogErrors(inputArray[0],inputArray[2],true);
-		    			} catch (IOException e1) {
-		    				System.out.println("The file cannot be found");
-		    				e1.printStackTrace();
-		    			}
-		    		}
-			}
-			
-			
 		
-		    		
-		
-		    		
-		            
-		       
-	          
-			}
 			
 			
 

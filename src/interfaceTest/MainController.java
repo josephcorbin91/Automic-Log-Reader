@@ -54,7 +54,7 @@ public class MainController {
 		
 		//User enters arguments manually 		
 		
-		inputArray = new String[3];
+		inputArray = new String[2];
 		String softwareProduct;
 		
 		
@@ -73,7 +73,7 @@ public class MainController {
 	
 		//Verify SoftwareProduct
 		boolean isValidSoftwareProduct=false;
-		softwareProduct = args[2];	
+		softwareProduct = args[1];	
 		while(!isValidSoftwareProduct){
 			if(!validProducts.contains(softwareProduct)){
 				
@@ -88,9 +88,9 @@ public class MainController {
 				isValidSoftwareProduct=true;
 			}
 		}
-		inputArray[2] = softwareProduct;				
+		inputArray[1] = softwareProduct;				
 			
-		
+		/*
 		//Verify Groups
 		String groups=args[1];
 	
@@ -99,6 +99,7 @@ public class MainController {
 			
 			inputArray[1]="NoGroup";
 		}
+		*/
 		
 	}
 	
