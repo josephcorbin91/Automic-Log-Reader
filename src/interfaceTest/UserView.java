@@ -244,8 +244,7 @@ public class UserView extends JFrame{
 			
 			loadGroupInfo(stmt, sql_software_table);
 			stmt.close();
-			
-			prepareGUI(menu, isAdmin, sql_software_table);
+			doNotPrepareGUI(menu, isAdmin, sql_software_table);
 			///////////////////////////////////////////////////////////////////////////////////////////
 			//No group selected
 			
@@ -883,395 +882,394 @@ public class UserView extends JFrame{
 	
 
 	private void doNotPrepareGUI(MainMenu menu, boolean isAdmin, String softwareSelected){
-		
-	
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setBounds(100, 100, 1500, 400);
-	setLocationRelativeTo(null);
-	setMinimumSize(new Dimension(1000, 300));
-	
-	try {
-	     ClassLoader cl = this.getClass().getClassLoader();
-	     ImageIcon programIcon = new ImageIcon(cl.getResource("res/logo.png"));
-	     setIconImage(programIcon.getImage());
-	  } catch (Exception e) {
-	  }
 
-	JPanel pnlMain = new JPanel();
-	pnlMain.setBorder(new EmptyBorder(5, 5, 5, 5));
-	setContentPane(pnlMain);
-	pnlMain.setLayout(new BorderLayout(0, 0));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 1500, 400);
+		setLocationRelativeTo(null);
+		setMinimumSize(new Dimension(1000, 300));
+		
+		try {
+		     ClassLoader cl = this.getClass().getClassLoader();
+		     ImageIcon programIcon = new ImageIcon(cl.getResource("res/logo.png"));
+		     setIconImage(programIcon.getImage());
+		  } catch (Exception e) {
+		  }
 	
-	JPanel pnlBottom = new JPanel();
-	pnlMain.add(pnlBottom, BorderLayout.SOUTH);
-	
-	pnlBottom.setLayout(new BoxLayout(pnlBottom, BoxLayout.X_AXIS));
-	
-	pnlBottom.add(Box.createHorizontalStrut(20));
-	pnlBottom.add(Box.createHorizontalStrut(20));
-	
-	JButton btnPreference = new JButton("Preferences");
-	btnPreference.addActionListener(e -> {
-		new PreferenceEditor(this, isAdmin);
-	});
-	btnPreference.setToolTipText("Groupings, Time Critical DB Call Intervals ...");
-	pnlBottom.add(btnPreference);
-	
-	pnlBottom.add(Box.createRigidArea(new Dimension(10,0)));
-	
-	JButton chooseFile = new JButton("Choose File");
-	chooseFile.addActionListener(e -> {
-	    JFileChooser chooser = new JFileChooser();
-	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-	        "Text Files", "txt", "text");
-	    chooser.setFileFilter(filter);
-	    chooser.setAcceptAllFileFilterUsed(false);
-	    int returnVal = chooser.showOpenDialog(getRootPane());
-	    if(returnVal == JFileChooser.APPROVE_OPTION) {
-	    	 tfFilePath.setText(chooser.getSelectedFile().getAbsolutePath());
-	    }
-	});
-	pnlBottom.add(chooseFile);
-	
-	Component horizontalStrut = Box.createHorizontalStrut(20);
-	pnlBottom.add(horizontalStrut);
-	
-	tfFilePath = new JTextField();
-	pnlBottom.add(tfFilePath);
-	tfFilePath.setColumns(10);
-	
-	Component horizontalStrut_1 = Box.createHorizontalStrut(20);
-	pnlBottom.add(horizontalStrut_1);
-	
-	btnSubmit = new JButton("Submit");
-	btnSubmit.setBackground(new Color(0, 209, 54));
-	btnSubmit.setPreferredSize(new Dimension(80, 30));
-	btnSubmit.addActionListener(e -> {
-		String path = tfFilePath.getText();
-		if (path.equals(""))
-			JOptionPane.showMessageDialog(null, "Please enter a path");
-		else
+		JPanel pnlMain = new JPanel();
+		pnlMain.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(pnlMain);
+		pnlMain.setLayout(new BorderLayout(0, 0));
+		
+		JPanel pnlBottom = new JPanel();
+		pnlMain.add(pnlBottom, BorderLayout.SOUTH);
+		
+		pnlBottom.setLayout(new BoxLayout(pnlBottom, BoxLayout.X_AXIS));
+		
+		pnlBottom.add(Box.createHorizontalStrut(20));
+		pnlBottom.add(Box.createHorizontalStrut(20));
+		
+		JButton btnPreference = new JButton("Preferences");
+		btnPreference.addActionListener(e -> {
+			new PreferenceEditor(this, isAdmin);
+		});
+		btnPreference.setToolTipText("Groupings, Time Critical DB Call Intervals ...");
+		pnlBottom.add(btnPreference);
+		
+		pnlBottom.add(Box.createRigidArea(new Dimension(10,0)));
+		
+		JButton chooseFile = new JButton("Choose File");
+		chooseFile.addActionListener(e -> {
+		    JFileChooser chooser = new JFileChooser();
+		    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+		        "Text Files", "txt", "text", "log");
+		    chooser.setFileFilter(filter);
+		    chooser.setAcceptAllFileFilterUsed(false);
+		    int returnVal = chooser.showOpenDialog(getRootPane());
+		    if(returnVal == JFileChooser.APPROVE_OPTION) {
+		    	 tfFilePath.setText(chooser.getSelectedFile().getAbsolutePath());
+		    }
+		});
+		pnlBottom.add(chooseFile);
+		
+		Component horizontalStrut = Box.createHorizontalStrut(20);
+		pnlBottom.add(horizontalStrut);
+		
+		tfFilePath = new JTextField();
+		pnlBottom.add(tfFilePath);
+		tfFilePath.setColumns(10);
+		
+		Component horizontalStrut_1 = Box.createHorizontalStrut(20);
+		pnlBottom.add(horizontalStrut_1);
+		
+		btnSubmit = new JButton("Submit");
+		btnSubmit.setBackground(new Color(0, 209, 54));
+		btnSubmit.setPreferredSize(new Dimension(80, 30));
+		btnSubmit.addActionListener(e -> {
+			String path = tfFilePath.getText();
+			if (path.equals(""))
+				JOptionPane.showMessageDialog(null, "Please enter a path");
+			else
+				try {
+					findLogErrors(tfFilePath.getText(),softwareSelected,false);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, "The file cannot be found");
+					e1.printStackTrace();
+				}
+		});
+		btnSubmit.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
+        put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER,0), "Enter pressed");
+		btnSubmit.getActionMap().put("Enter pressed", new AbstractAction()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						if (tfFilePath.getText().equals(""))
+							JOptionPane.showMessageDialog(null, "Please enter a path");
+						else
+							try {
+								findLogErrors(tfFilePath.getText(), softwareSelected,false);
+							} catch (IOException e1) {
+								JOptionPane.showMessageDialog(null, "The file cannot be found");
+								e1.printStackTrace();
+							}
+					}
+				});
+		pnlBottom.add(btnSubmit);
+		
+		pnlBottom.add(Box.createRigidArea(new Dimension(10,0)));
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.setPreferredSize(new Dimension(80, 30));
+		btnBack.addActionListener(e ->{
+			menu.setVisible(true);
+			this.setVisible(false);
+		});
+		pnlBottom.add(btnBack);
+		
+		pnlBottom.add(Box.createRigidArea(new Dimension(10,0)));
+		
+		JButton btnAdmin = new JButton("Admin Features");
+		btnAdmin.setPreferredSize(new Dimension(130, 30));
+		btnAdmin.setToolTipText("Modify entries, folders, solutions");
+		btnAdmin.addActionListener(e -> {
 			try {
-				findLogErrors(tfFilePath.getText(),softwareSelected,false);
-			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(null, "The file cannot be found");
+				admin = new AdminView(this, softwareSelected);
+				admin.setVisible(true);
+			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-	});
-	btnSubmit.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
-    put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER,0), "Enter pressed");
-	btnSubmit.getActionMap().put("Enter pressed", new AbstractAction()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					if (tfFilePath.getText().equals(""))
-						JOptionPane.showMessageDialog(null, "Please enter a path");
-					else
-						try {
-							findLogErrors(tfFilePath.getText(), softwareSelected,false);
-						} catch (IOException e1) {
-							JOptionPane.showMessageDialog(null, "The file cannot be found");
-							e1.printStackTrace();
-						}
+			
+		});
+		pnlBottom.add(btnAdmin);
+		
+		if(isAdmin){
+			btnAdmin.setVisible(true);
+			setTitle("Administrator View for : " + softwareSelected);
+		} else {
+			btnAdmin.setVisible(false);
+			setTitle("User View for " + softwareSelected);
+		}
+		
+		pnlBottom.add(Box.createHorizontalStrut(20));
+		pnlBottom.add(Box.createHorizontalStrut(20));
+		
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setPreferredSize(new Dimension(600, 280));
+		
+		
+		JPanel pnlTop = new JPanel();
+		pnlTop.setMaximumSize(new Dimension(600, 280));
+		pnlMain.add(pnlTop, BorderLayout.CENTER);
+		pnlTop.setLayout(new BoxLayout(pnlTop, BoxLayout.X_AXIS));
+			
+		pnlTreeView = new JPanel();
+		pnlTreeView.setLayout(new BoxLayout(pnlTreeView, BoxLayout.Y_AXIS));
+		pnlTreeView.setBorder(new CompoundBorder(new EmptyBorder(5,5,5,5), pnlTreeView.getBorder()));
+		createTreeView();
+		
+		
+		JButton btnToggleAll = new JButton("Toggle All");
+		btnToggleAll.addActionListener(e -> {
+			cbTree.expandAll(new TreePath(cbTree.getModel().getRoot()));
+			Enumeration<?> g = ((DefaultMutableTreeNode) cbTree.getModel().getRoot()).preorderEnumeration();
+			while (g.hasMoreElements()){
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) g.nextElement();
+				Object obj = node.getUserObject();  
+				if (obj instanceof TreeNodeCheckBox){
+					TreeNodeCheckBox cb = (TreeNodeCheckBox) obj;
+					cb.setSelected(!cb.isSelected());
 				}
-			});
-	pnlBottom.add(btnSubmit);
-	
-	pnlBottom.add(Box.createRigidArea(new Dimension(10,0)));
-	
-	JButton btnBack = new JButton("Back");
-	btnBack.setPreferredSize(new Dimension(80, 30));
-	btnBack.addActionListener(e ->{
-		menu.setVisible(true);
-		this.setVisible(false);
-	});
-	pnlBottom.add(btnBack);
-	
-	pnlBottom.add(Box.createRigidArea(new Dimension(10,0)));
-	
-	JButton btnAdmin = new JButton("Admin Features");
-	btnAdmin.setPreferredSize(new Dimension(130, 30));
-	btnAdmin.setToolTipText("Modify entries, folders, solutions");
-	btnAdmin.addActionListener(e -> {
-		try {
-			admin = new AdminView(this, softwareSelected);
-			admin.setVisible(true);
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		
-	});
-	pnlBottom.add(btnAdmin);
-	
-	if(isAdmin){
-		btnAdmin.setVisible(true);
-		setTitle("Administrator View for : " + softwareSelected);
-	} else {
-		btnAdmin.setVisible(false);
-		setTitle("User View for " + softwareSelected);
-	}
-	
-	pnlBottom.add(Box.createHorizontalStrut(20));
-	pnlBottom.add(Box.createHorizontalStrut(20));
-	
-	tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-	tabbedPane.setPreferredSize(new Dimension(600, 280));
-	
-	
-	JPanel pnlTop = new JPanel();
-	pnlTop.setMaximumSize(new Dimension(600, 280));
-	pnlMain.add(pnlTop, BorderLayout.CENTER);
-	pnlTop.setLayout(new BoxLayout(pnlTop, BoxLayout.X_AXIS));
-		
-	pnlTreeView = new JPanel();
-	pnlTreeView.setLayout(new BoxLayout(pnlTreeView, BoxLayout.Y_AXIS));
-	pnlTreeView.setBorder(new CompoundBorder(new EmptyBorder(5,5,5,5), pnlTreeView.getBorder()));
-	createTreeView();
-	
-	
-	JButton btnToggleAll = new JButton("Toggle All");
-	btnToggleAll.addActionListener(e -> {
-		cbTree.expandAll(new TreePath(cbTree.getModel().getRoot()));
-		Enumeration<?> g = ((DefaultMutableTreeNode) cbTree.getModel().getRoot()).preorderEnumeration();
-		while (g.hasMoreElements()){
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) g.nextElement();
-			Object obj = node.getUserObject();  
-			if (obj instanceof TreeNodeCheckBox){
-				TreeNodeCheckBox cb = (TreeNodeCheckBox) obj;
-				cb.setSelected(!cb.isSelected());
 			}
-		}
-		pnlTreeView.repaint();
-	});
-	btnToggleAll.setAlignmentX( Component.CENTER_ALIGNMENT);
+    		pnlTreeView.repaint();
+		});
+		btnToggleAll.setAlignmentX( Component.CENTER_ALIGNMENT);
+		
+		treeScrollPane = new JScrollPane(cbTree);
+		pnlTreeView.add(treeScrollPane);
+		pnlTreeView.add(Box.createRigidArea(new Dimension(0, 5)));
+		pnlTreeView.add(btnToggleAll);
+		
+		/*** AND OR NOT PANEL ***/
+		
+		JPanel pnlAndOrNot = new JPanel();
+		pnlAndOrNot.setMaximumSize(new Dimension(600, 280));
+		pnlAndOrNot.setOpaque(true);
+		pnlAndOrNot.setBackground(Color.WHITE);
+		pnlAndOrNot.setLayout(new BoxLayout(pnlAndOrNot, BoxLayout.Y_AXIS));
 	
-	treeScrollPane = new JScrollPane(cbTree);
-	pnlTreeView.add(treeScrollPane);
-	pnlTreeView.add(Box.createRigidArea(new Dimension(0, 5)));
-	pnlTreeView.add(btnToggleAll);
-	
-	/*** AND OR NOT PANEL ***/
-	
-	JPanel pnlAndOrNot = new JPanel();
-	pnlAndOrNot.setMaximumSize(new Dimension(600, 280));
-	pnlAndOrNot.setOpaque(true);
-	pnlAndOrNot.setBackground(Color.WHITE);
-	pnlAndOrNot.setLayout(new BoxLayout(pnlAndOrNot, BoxLayout.Y_AXIS));
-
-	JPanel pnlInstructions = new JPanel(new FlowLayout());
-	JLabel lblInstructions = new JLabel("Select keywords and operators from the boxes below", JLabel.CENTER);
-	lblInstructions.setAlignmentX(CENTER_ALIGNMENT);
-	pnlInstructions.add(lblInstructions);
-	pnlInstructions.setOpaque(true);
-	pnlInstructions.setBackground(Color.WHITE);
-	
-	JPanel pnlComboBox = new JPanel(new FlowLayout());
-	pnlComboBox.add(Box.createHorizontalGlue());
-	pnlComboBox.setOpaque(true);
-	pnlComboBox.setBackground(Color.WHITE);
-	cbKey1 = new LogicalComboBox(2, this);
-	cbKey1.addActionListener(e -> {
-		if (cbKey1.getSelectedIndex() != -1 && cbLogic1.getSelectedIndex() != -1 && cbKey2.getSelectedIndex() != -1){
-			cbLogic2.setEnabled(true);
-			cbKey3.setEnabled(true);
-		}
-	});
-	cbLogic1 = new LogicalComboBox(3, this);
-	cbLogic1.addActionListener(e -> {
-		if (cbKey1.getSelectedIndex() != -1 && cbLogic1.getSelectedIndex() != -1 && cbKey2.getSelectedIndex() != -1){
-			cbLogic2.setEnabled(true);
-			cbKey3.setEnabled(true);
-		}
-	});
-	cbKey2 = new LogicalComboBox(2, this);
-	cbKey2.addActionListener(e -> {
-		if (cbKey1.getSelectedIndex() != -1 && cbLogic1.getSelectedIndex() != -1 && cbKey2.getSelectedIndex() != -1){
-			cbLogic2.setEnabled(true);
-			cbKey3.setEnabled(true);
-		}
-	});
-	cbLogic2 = new LogicalComboBox(1, this);
-	cbLogic2.setEnabled(false);
-	cbKey3 = new LogicalComboBox(2, this);
-	cbKey3.setEnabled(false);
-	
-	JLabel lblLeftParen_1 = new JLabel("(");
-	lblLeftParen_1.setFont(new Font("Serif", Font.PLAIN, 20));
-	JLabel lblLeftParen_2 = new JLabel("(");
-	lblLeftParen_2.setFont(new Font("Serif", Font.PLAIN, 20));
-	JLabel lblRightParen_1 = new JLabel(")");
-	lblRightParen_1.setFont(new Font("Serif", Font.PLAIN, 20));
-	JLabel lblRightParen_2 = new JLabel(")");
-	lblRightParen_2.setFont(new Font("Serif", Font.PLAIN, 20));
-	pnlComboBox.add(lblLeftParen_1);
-	pnlComboBox.add(lblLeftParen_2);
-	pnlComboBox.add(cbKey1);
-	pnlComboBox.add(cbLogic1);
-	pnlComboBox.add(cbKey2);
-	pnlComboBox.add(lblRightParen_1);
-	pnlComboBox.add(cbLogic2);
-	pnlComboBox.add(cbKey3);
-	pnlComboBox.add(lblRightParen_2);
-	pnlComboBox.add(Box.createHorizontalGlue());
-	
-	JButton btnClear = new JButton("Clear");
-	btnClear.setAlignmentX(CENTER_ALIGNMENT);
-	btnClear.addActionListener(e -> {
-		cbLogic1.setSelectedIndex(-1);
-		cbLogic2.setSelectedIndex(-1);
-		cbKey1.setSelectedIndex(-1);
-		cbKey2.setSelectedIndex(-1);
-		cbKey3.setSelectedIndex(-1);
+		JPanel pnlInstructions = new JPanel(new FlowLayout());
+		JLabel lblInstructions = new JLabel("Select keywords and operators from the boxes below", JLabel.CENTER);
+		lblInstructions.setAlignmentX(CENTER_ALIGNMENT);
+		pnlInstructions.add(lblInstructions);
+		pnlInstructions.setOpaque(true);
+		pnlInstructions.setBackground(Color.WHITE);
+		
+		JPanel pnlComboBox = new JPanel(new FlowLayout());
+		pnlComboBox.add(Box.createHorizontalGlue());
+		pnlComboBox.setOpaque(true);
+		pnlComboBox.setBackground(Color.WHITE);
+		cbKey1 = new LogicalComboBox(2, this);
+		cbKey1.addActionListener(e -> {
+			if (cbKey1.getSelectedIndex() != -1 && cbLogic1.getSelectedIndex() != -1 && cbKey2.getSelectedIndex() != -1){
+				cbLogic2.setEnabled(true);
+				cbKey3.setEnabled(true);
+			}
+		});
+		cbLogic1 = new LogicalComboBox(3, this);
+		cbLogic1.addActionListener(e -> {
+			if (cbKey1.getSelectedIndex() != -1 && cbLogic1.getSelectedIndex() != -1 && cbKey2.getSelectedIndex() != -1){
+				cbLogic2.setEnabled(true);
+				cbKey3.setEnabled(true);
+			}
+		});
+		cbKey2 = new LogicalComboBox(2, this);
+		cbKey2.addActionListener(e -> {
+			if (cbKey1.getSelectedIndex() != -1 && cbLogic1.getSelectedIndex() != -1 && cbKey2.getSelectedIndex() != -1){
+				cbLogic2.setEnabled(true);
+				cbKey3.setEnabled(true);
+			}
+		});
+		cbLogic2 = new LogicalComboBox(1, this);
 		cbLogic2.setEnabled(false);
+		cbKey3 = new LogicalComboBox(2, this);
 		cbKey3.setEnabled(false);
-	});
-	
-	pnlAndOrNot.add(Box.createVerticalGlue());
-	pnlAndOrNot.add(Box.createRigidArea(new Dimension(0, 10)));
-	pnlAndOrNot.add(pnlInstructions);
-	
-	pnlAndOrNot.add(pnlComboBox);
-	pnlAndOrNot.add(btnClear);
-	pnlAndOrNot.add(Box.createVerticalGlue());
-	
-	/*** GROUP PANEL ***/
-	JPanel pnlGroupView = new JPanel();
-	pnlGroupView.setLayout(new BoxLayout(pnlGroupView, BoxLayout.Y_AXIS));
-	pnlGroupView.setMaximumSize(new Dimension(600, 280));
-	groupKeywordsListModel = new DefaultListModel<String>();
-	groupKeywordsList = new JList<String>(groupKeywordsListModel);
-	
-	
-	groupNameListModel = new DefaultListModel<CheckBoxListItem>();
-	createGroupView();
-	groupNameList = new JList<CheckBoxListItem>(groupNameListModel);
-	groupNameList.setCellRenderer(new CheckBoxListRenderer());
-	groupNameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	
-
+		
+		JLabel lblLeftParen_1 = new JLabel("(");
+		lblLeftParen_1.setFont(new Font("Serif", Font.PLAIN, 20));
+		JLabel lblLeftParen_2 = new JLabel("(");
+		lblLeftParen_2.setFont(new Font("Serif", Font.PLAIN, 20));
+		JLabel lblRightParen_1 = new JLabel(")");
+		lblRightParen_1.setFont(new Font("Serif", Font.PLAIN, 20));
+		JLabel lblRightParen_2 = new JLabel(")");
+		lblRightParen_2.setFont(new Font("Serif", Font.PLAIN, 20));
+		pnlComboBox.add(lblLeftParen_1);
+		pnlComboBox.add(lblLeftParen_2);
+		pnlComboBox.add(cbKey1);
+		pnlComboBox.add(cbLogic1);
+		pnlComboBox.add(cbKey2);
+		pnlComboBox.add(lblRightParen_1);
+		pnlComboBox.add(cbLogic2);
+		pnlComboBox.add(cbKey3);
+		pnlComboBox.add(lblRightParen_2);
+		pnlComboBox.add(Box.createHorizontalGlue());
+		
+		JButton btnClear = new JButton("Clear");
+		btnClear.setAlignmentX(CENTER_ALIGNMENT);
+		btnClear.addActionListener(e -> {
+			cbLogic1.setSelectedIndex(-1);
+			cbLogic2.setSelectedIndex(-1);
+			cbKey1.setSelectedIndex(-1);
+			cbKey2.setSelectedIndex(-1);
+			cbKey3.setSelectedIndex(-1);
+			cbLogic2.setEnabled(false);
+			cbKey3.setEnabled(false);
+		});
+		
+		pnlAndOrNot.add(Box.createVerticalGlue());
+		pnlAndOrNot.add(Box.createRigidArea(new Dimension(0, 10)));
+		pnlAndOrNot.add(pnlInstructions);
+		
+		pnlAndOrNot.add(pnlComboBox);
+		pnlAndOrNot.add(btnClear);
+		pnlAndOrNot.add(Box.createVerticalGlue());
+		
+		/*** GROUP PANEL ***/
+		JPanel pnlGroupView = new JPanel();
+		pnlGroupView.setLayout(new BoxLayout(pnlGroupView, BoxLayout.Y_AXIS));
+		pnlGroupView.setMaximumSize(new Dimension(600, 280));
+		groupKeywordsListModel = new DefaultListModel<String>();
+		groupKeywordsList = new JList<String>(groupKeywordsListModel);
+		
+		
+		groupNameListModel = new DefaultListModel<CheckBoxListItem>();
+		createGroupView();
+		groupNameList = new JList<CheckBoxListItem>(groupNameListModel);
+		groupNameList.setCellRenderer(new CheckBoxListRenderer());
+		groupNameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 	
-	groupNameList.addMouseListener(new MouseAdapter(){
-		 public void mouseClicked(MouseEvent event) {
-	            @SuppressWarnings("unchecked")
-				JList<CheckBoxListItem> list =
-	               (JList<CheckBoxListItem>) event.getSource();
-	            int index = list.locationToIndex(event.getPoint());
-	            CheckBoxListItem item = (CheckBoxListItem) list.getModel()
-	                  .getElementAt(index);		            
-	            		          
-	            item.setSelected(!item.isSelected());
-	            list.repaint(list.getCellBounds(index, index));
-	            groupKeywordsHashSet.clear();
-	            groupKeywordsListModel.clear();
-	            for (int i=0; i<groupNameListModel.size(); i++){
-            		CheckBoxListItem cbItem = (CheckBoxListItem) list.getModel()
-            				.getElementAt(i);
-            		
-            		if (cbItem.isSelected()){
-            			
-            			String keywordString = GroupInfo.get(cbItem.toString());
-            			
-			            String keywordStringArray[] = keywordString.split(" ");
-			            for (String key : keywordStringArray){
-			            	groupKeywordsHashSet.add(key);
-			            }
-            		}
-            	}
-	            for (String key : groupKeywordsHashSet){
-	            	groupKeywordsListModel.addElement(key);
-	            	
-	            	
-	            }
-	         }
-	});
-	groupScrollPane = new JScrollPane(groupNameList);
-	groupScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-	Border border = groupScrollPane.getBorder();
-	Border margin = new EmptyBorder(5,5,5,5);
-	groupScrollPane.setBorder(new CompoundBorder(margin, border));
-	pnlGroupView.add(groupScrollPane);
-	
-	
-	JScrollPane pnlGroupViewBottom = new JScrollPane(groupKeywordsList);
-	
-	pnlGroupViewBottom.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-	pnlGroupViewBottom.setViewportView(groupKeywordsList);
-	
-	pnlGroupViewBottom.setBorder(new CompoundBorder(margin, border));
-	pnlGroupView.add(pnlGroupViewBottom);
+			
+		
+		groupNameList.addMouseListener(new MouseAdapter(){
+			 public void mouseClicked(MouseEvent event) {
+		            @SuppressWarnings("unchecked")
+					JList<CheckBoxListItem> list =
+		               (JList<CheckBoxListItem>) event.getSource();
+		            int index = list.locationToIndex(event.getPoint());
+		            CheckBoxListItem item = (CheckBoxListItem) list.getModel()
+		                  .getElementAt(index);		            
+		            		          
+		            item.setSelected(!item.isSelected());
+		            list.repaint(list.getCellBounds(index, index));
+		            groupKeywordsHashSet.clear();
+		            groupKeywordsListModel.clear();
+		            for (int i=0; i<groupNameListModel.size(); i++){
+	            		CheckBoxListItem cbItem = (CheckBoxListItem) list.getModel()
+	            				.getElementAt(i);
+	            		
+	            		if (cbItem.isSelected()){
+	            			
+	            			String keywordString = GroupInfo.get(cbItem.toString());
+	            			
+				            String keywordStringArray[] = keywordString.split(" ");
+				            for (String key : keywordStringArray){
+				            	groupKeywordsHashSet.add(key);
+				            }
+	            		}
+	            	}
+		            for (String key : groupKeywordsHashSet){
+		            	groupKeywordsListModel.addElement(key);
+		            	
+		            	
+		            }
+		         }
+		});
+		groupScrollPane = new JScrollPane(groupNameList);
+		groupScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		Border border = groupScrollPane.getBorder();
+		Border margin = new EmptyBorder(5,5,5,5);
+		groupScrollPane.setBorder(new CompoundBorder(margin, border));
+		pnlGroupView.add(groupScrollPane);
+		
+		
+		JScrollPane pnlGroupViewBottom = new JScrollPane(groupKeywordsList);
+		
+		pnlGroupViewBottom.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		pnlGroupViewBottom.setViewportView(groupKeywordsList);
+		
+		pnlGroupViewBottom.setBorder(new CompoundBorder(margin, border));
+		pnlGroupView.add(pnlGroupViewBottom);
 
-	
-	tabbedPane.addTab("Tree View", pnlTreeView);
-	tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
-	tabbedPane.addTab("AND/OR/NOT View", pnlAndOrNot);
-	tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
-	tabbedPane.addTab("Group View", pnlGroupView);
-	tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
-	
-	pnlTop.add(tabbedPane);
-	pnlTop.add(Box.createRigidArea(new Dimension(10, 0)));
-	
-	DefaultTableModel tableModel = new DefaultTableModel(data, chosenHeader) {
-	    @Override
-	    public boolean isCellEditable(int row, int column) {
-	       //all cells false
-	       return false;
-	    }
-	    
-	}; 
-	popupMenu = new JPopupMenu();
-    menuItemCopy = new JMenuItem("Copy");
-    menuItemCopy.addActionListener(e -> {
-    	TableMouseListener.copyCellValueToClipBoard();
-    });
-    menuItemCopy.setEnabled(false);
-    popupMenu.add(menuItemCopy);
-    
-    menuItemUrl = new JMenuItem("See suggested solution online");
-    menuItemUrl.addActionListener(e -> {
-    	try {
-			TableMouseListener.openURI();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-    });
-    menuItemUrl.setEnabled(false);
-    popupMenu.add(menuItemUrl);
-    
-    menuItemLines = new JMenuItem("Show lines before and after");
-    menuItemLines.addActionListener(e -> {
-    	LineDialog lineDialog = new LineDialog(TableMouseListener.getCurrentRow(), this, 
-    			(String) errorTable.getValueAt(TableMouseListener.getCurrentRow(), 3));
-    });
-    menuItemLines.setEnabled(false);
-    popupMenu.add(menuItemLines);
-    
-    
-    
-    
-	errorTable = new JTable(tableModel);
-	errorTable.setCellSelectionEnabled(true);
-	errorTable.setComponentPopupMenu(popupMenu);
-	errorTable.addMouseListener(new TableMouseListener(errorTable));
-	
-	errorScrollPane = new JScrollPane(errorTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	errorScrollPane.setPreferredSize(new Dimension(700, 280));
-	errorScrollPane.setBorder(new CompoundBorder(new EmptyBorder(5,5,5,5), new LineBorder(Color.GRAY)));
-	
-	JPanel pnlRight = new JPanel();
-	pnlRight.setLayout(new BoxLayout(pnlRight, BoxLayout.Y_AXIS));
-	
-	JLabel lblTable = new JLabel("Error Table");
-	lblTable.setFont(lblTable.getFont().deriveFont(15.0f));
-	lblTable.setAlignmentX(CENTER_ALIGNMENT);
-	
-	pnlRight.add(lblTable);
-	pnlRight.add(errorScrollPane);
-	
-	pnlTop.add(pnlRight);
-	
-	setVisible(true);
+		
+		tabbedPane.addTab("Tree View", pnlTreeView);
+		tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+		tabbedPane.addTab("AND/OR/NOT View", pnlAndOrNot);
+		tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+		tabbedPane.addTab("Group View", pnlGroupView);
+		tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
+		
+		pnlTop.add(tabbedPane);
+		pnlTop.add(Box.createRigidArea(new Dimension(10, 0)));
+		
+		DefaultTableModel tableModel = new DefaultTableModel(data, chosenHeader) {
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		    
+		}; 
+		popupMenu = new JPopupMenu();
+        menuItemCopy = new JMenuItem("Copy");
+        menuItemCopy.addActionListener(e -> {
+        	TableMouseListener.copyCellValueToClipBoard();
+        });
+        menuItemCopy.setEnabled(false);
+        popupMenu.add(menuItemCopy);
+        
+        menuItemUrl = new JMenuItem("See suggested solution online");
+        menuItemUrl.addActionListener(e -> {
+        	try {
+				TableMouseListener.openURI();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+        });
+        menuItemUrl.setEnabled(false);
+        popupMenu.add(menuItemUrl);
+        
+        menuItemLines = new JMenuItem("Show lines before and after");
+        menuItemLines.addActionListener(e -> {
+        	LineDialog lineDialog = new LineDialog(TableMouseListener.getCurrentRow(), this, 
+        			(String) errorTable.getValueAt(TableMouseListener.getCurrentRow(), 3));
+        });
+        menuItemLines.setEnabled(false);
+        popupMenu.add(menuItemLines);
+        
+        
+        
+        
+		errorTable = new JTable(tableModel);
+		errorTable.setCellSelectionEnabled(true);
+		errorTable.setComponentPopupMenu(popupMenu);
+		errorTable.addMouseListener(new TableMouseListener(errorTable));
+		
+		errorScrollPane = new JScrollPane(errorTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		errorScrollPane.setPreferredSize(new Dimension(700, 280));
+		errorScrollPane.setBorder(new CompoundBorder(new EmptyBorder(5,5,5,5), new LineBorder(Color.GRAY)));
+		
+		JPanel pnlRight = new JPanel();
+		pnlRight.setLayout(new BoxLayout(pnlRight, BoxLayout.Y_AXIS));
+		
+		JLabel lblTable = new JLabel("Error Table");
+		lblTable.setFont(lblTable.getFont().deriveFont(15.0f));
+		lblTable.setAlignmentX(CENTER_ALIGNMENT);
+		
+		pnlRight.add(lblTable);
+		pnlRight.add(errorScrollPane);
+		
+		pnlTop.add(pnlRight);
+		
+		setVisible(false);
 }
 
 	/**
